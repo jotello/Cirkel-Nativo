@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "635146657542",
+    "firebase_url": "https://cirkel-nativo.firebaseio.com",
+    "project_id": "cirkel-nativo",
+    "storage_bucket": "cirkel-nativo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:635146657542:android:5dc5290bfcbd7c406fc887",
+        "android_client_info": {
+          "package_name": "com.cirkel.nativo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "635146657542-b7f6m902imuhg1j1b1tr0s1m7boj3uf6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cirkel.nativo",
+            "certificate_hash": "4d793413c7cfe34f32ad0d56b03d5af82d0113dc"
+          }
+        },
+        {
+          "client_id": "635146657542-cnmml5ntlic2dm5lv1eltm17hv2e8a62.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFbxnr11xe3J3Ean-V7RcB2aIixKDxm08"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "635146657542-cnmml5ntlic2dm5lv1eltm17hv2e8a62.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

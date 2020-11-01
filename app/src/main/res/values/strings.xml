@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Cirkel nativo</string>
+    <string name="btn_signup">Registrarse</string>
+    <string name="btn_login">Ingresar</string>
+    <string name="email_text">Email:</string>
+    <string name="password_text">Contraseña:</string>
+    <string name="name_text">Nombre:</string>
+    <string name="number_text">Teléfono (+56):</string>
+    <string name="cancel_text">Cancelar</string>
+    <string name="register_text">Registrar</string>
+    <string name="register_title_form">Registro de usuario</string>
+    <string name="send_alert_text">Enviar alerta</string>
+    <string name="contacts_text">Ver contactos</string>
+    <string name="logout_text">Salir</string>
+    <string name="add_contact_title">Creación de contacto</string>
+</resources>
