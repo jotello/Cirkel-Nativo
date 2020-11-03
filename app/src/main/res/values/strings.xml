@@ -13,4 +13,8 @@
     <string name="contacts_text">Ver contactos</string>
     <string name="logout_text">Salir</string>
     <string name="add_contact_title">Creación de contacto</string>
+    <string name="cancel_alert_text">Cancelar alerta</string>
+    <string name="finish_alert_text">Finalizar alerta</string>
+    <string name="active_alert_id">active_alert_id</string>
+    <string name="active_alert_exists">active_alert_exists</string>
 </resources>
