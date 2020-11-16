@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_marginTop="10dp"
+
+    android:background="@color/white"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@mipmap/ic_launcher_cirkel"
+            android:drawablePadding="5dp"
+            android:gravity="center_vertical" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/nav_header_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium.Inverse" />
+            <TextView
+                android:id="@+id/nav_header_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small.Inverse" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black"
+        />
+
+</LinearLayout>

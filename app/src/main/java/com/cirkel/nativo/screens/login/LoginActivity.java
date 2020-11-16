@@ -1,11 +1,14 @@
 package com.cirkel.nativo.screens.login;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.cirkel.nativo.common.BaseError;
@@ -30,12 +33,14 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
     private LoginContract.Presenter mPresenter;
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         mPresenter = new LoginPresenter(this);
+        btnLogin.setBackground(getDrawable(R.drawable.btn_login_background));
     }
 
     @OnClick(R.id.btn_login)

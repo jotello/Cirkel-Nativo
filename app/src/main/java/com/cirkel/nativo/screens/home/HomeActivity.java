@@ -1,10 +1,18 @@
 package com.cirkel.nativo.screens.home;
 
-import androidx.appcompat.app.AppCompatActivity;
+import java.util.Calendar;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -15,25 +23,33 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import com.cirkel.nativo.R;
 import com.cirkel.nativo.common.BaseError;
 import com.cirkel.nativo.common.Core;
 import com.cirkel.nativo.models.Alert;
 import com.cirkel.nativo.screens.contacts.ContactsActivity;
 import com.cirkel.nativo.screens.login.LoginActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
 import java.util.List;
 import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class HomeActivity extends AppCompatActivity
-        implements HomeContract.View, LocationListener {
+public class HomeActivity extends Activity
+        implements HomeContract.View, LocationListener,
+        NavigationView.OnNavigationItemSelectedListener,
+        DrawerLayout.DrawerListener {
 
     // region fields
     @SuppressLint("NonConstantResourceId")
@@ -43,11 +59,20 @@ public class HomeActivity extends AppCompatActivity
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.btn_finish_alert) Button btnFinishAlert;
     @SuppressLint("NonConstantResourceId")
-    @BindView(R.id.btn_contacts) Button btnContacts;
-    @SuppressLint("NonConstantResourceId")
-    @BindView(R.id.btn_logout) Button btnLogout;
-    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.loader_home) ProgressBar loaderHome;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.bottom_navigation_home)
+    public BottomNavigationView bottomNavigationView;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.toolbar_home)
+    Toolbar toolbar;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.drawer_layout_home)
+    DrawerLayout drawerLayout;
+    @BindView(R.id.navigation_view)
+    NavigationView navigationView;
+    TextView navHeaderUsername;
+    TextView navHeaderEmail;
     // endregion fields
 
     // region variables
@@ -65,32 +90,60 @@ public class HomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
-        checkFirebaseUser();
-        init_variables();
+        setVariables();
         runtimePermissions();
         checkActiveAlert();
+        checkFirebaseUser();
     }
 
+    @SuppressLint("CommitPrefEdits")
+    private void setVariables() {
+        mPresenter = new HomePresenter(this);
+        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
+        bottomNavigationView.setBackgroundColor(ContextCompat.getColor(this,
+                R.color.menuBarBackground));
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @SuppressLint("NonConstantResourceId")
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_home:
+                        break;
+                    case R.id.action_contacts:
+                        Core.newActivity(HomeActivity.this,ContactsActivity.class);
+                        break;
+                }
+                return true;
+            }
+        });
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout,
+                toolbar, R.string.open_drawer, R.string.close_drawer);
+        drawerLayout.addDrawerListener(toggle);
+
+        navigationView.setNavigationItemSelectedListener(this);
+        toggle.syncState();
+        View headerView = navigationView.getHeaderView(0);
+        navHeaderUsername = headerView.findViewById(R.id.nav_header_username);
+        navHeaderEmail = headerView.findViewById(R.id.nav_header_email);
+    }
+
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_alert)
     void onClick_getLocation(View view) {
+        Log.i("INIT_ALERT", String.valueOf(Calendar.getInstance().getTime()));
         getLocation();
     }
 
-    @OnClick(R.id.btn_contacts)
-    void onClick_goToContacts(View view) { Core.newActivity(this,ContactsActivity.class); }
-
-    @OnClick(R.id.btn_logout)
-    void onClick_Logout(View view) {
-        mPresenter.attempLogout();
-        onNavigateLogin();
-    }
-
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_cancel_alert)
     void onClick_cancelAlert(View view){
         removeLocationUpdates();
         mPresenter.attempEndAlert(alertId, new Alert(lastAddress, lastLocation, "canceled"));
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_finish_alert)
     void onClick_finishAlert(View view){
         removeLocationUpdates();
@@ -111,8 +164,8 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void setEnabledView(boolean enable) {
         btnAlert.setEnabled(enable);
-        btnContacts.setEnabled(enable);
-        btnLogout.setEnabled(enable);
+        btnCancelAlert.setEnabled(enable);
+        btnFinishAlert.setEnabled(enable);
     }
 
     @Override
@@ -194,10 +247,8 @@ public class HomeActivity extends AppCompatActivity
     private void checkFirebaseUser() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            // User is signed in
-            //TODO: Agregar datos del usuario en menu
-            Log.i("USER_ID", user.getUid());
-            Log.i("USER_EMAIL", user.getEmail());
+            navHeaderUsername.setText(user.getDisplayName());
+            navHeaderEmail.setText(user.getEmail());
         } else {
             onNavigateLogin();
         }
@@ -212,13 +263,6 @@ public class HomeActivity extends AppCompatActivity
             stateOfActiveAlert_inView(false);
             alertId = "";
         }
-    }
-
-    @SuppressLint("CommitPrefEdits")
-    private void init_variables() {
-        mPresenter = new HomePresenter(this);
-        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        editor = sharedPref.edit();
     }
 
     private void runtimePermissions() {
@@ -253,5 +297,49 @@ public class HomeActivity extends AppCompatActivity
         locationManager = (LocationManager) getApplicationContext()
                 .getSystemService(LOCATION_SERVICE);
         locationManager.removeUpdates(this);
+    }
+
+    @Override
+    public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+    }
+
+    @Override
+    public void onDrawerOpened(@NonNull View drawerView) {
+
+    }
+
+    @Override
+    public void onDrawerClosed(@NonNull View drawerView) {
+
+    }
+
+    @Override
+    public void onDrawerStateChanged(int newState) {
+
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_logout:
+                mPresenter.attempLogout();
+                setAlertInSharedPref("");
+                onNavigateLogin();
+            default:
+                break;
+        }
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

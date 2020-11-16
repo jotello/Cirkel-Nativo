@@ -1,7 +1,6 @@
 package com.cirkel.nativo.screens.newContact;
 
 import android.util.Patterns;
-
 import com.cirkel.nativo.common.BaseError;
 import com.cirkel.nativo.common.CompleteListener;
 import com.cirkel.nativo.models.Contact;
@@ -22,6 +21,7 @@ public class NewContactPresenter implements
         if(mView != null) {
             setLoader(false);
             mView.backToContacts();
+            mView.displayCreationError("¡Contacto añadido con éxito!");
         }
     }
 

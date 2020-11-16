@@ -8,6 +8,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +36,10 @@ public class SignupInteractor implements SignupContract.Interactor {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
-                            createUserInDB(email, name, cellphone);
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            createUserInDB(user, email, name, cellphone);
+                            updateUserAuth(user, name);
+                            mAuth.signOut();
                             mListener.onSuccess();
                         } else {
                             mListener.onError(BaseError.CREATE_USER_GENERAL_ERROR);
@@ -48,13 +54,18 @@ public class SignupInteractor implements SignupContract.Interactor {
                 });
     }
 
-    private void createUserInDB(String email, String name, String cellphone) {
-        String userId = mAuth.getCurrentUser().getUid();
+    private void updateUserAuth(FirebaseUser user, String name) {
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(name)
+                .build();
+        user.updateProfile(profileUpdates);
+    }
+
+    private void createUserInDB(FirebaseUser userFirebase, String email, String name, String cellphone) {
         User user = new User(email, name, cellphone);
         Map<String, Object> postValues = user.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("users/" + userId + "/", postValues);
+        childUpdates.put("users/" + userFirebase.getUid() + "/", postValues);
         mDatabase.updateChildren(childUpdates);
-        mAuth.signOut();
     }
 }

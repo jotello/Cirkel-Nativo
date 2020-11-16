@@ -17,7 +17,7 @@ public interface SignupContract {
         void attemptSignup(String email, String password,
                            String name, String cellphone);
         boolean isValidForm(String email, String password,
-                            String name, String cellphone);
+                            String name, String cellphone, String confirmPassword);
         void onDestroy();
         void setLoader(boolean state);
     }

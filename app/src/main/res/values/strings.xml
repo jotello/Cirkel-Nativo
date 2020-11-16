@@ -1,20 +1,41 @@
 <resources>
-    <string name="app_name">Cirkel nativo</string>
-    <string name="btn_signup">Registrarse</string>
-    <string name="btn_login">Ingresar</string>
+    <string name="app_name">Cirkel</string>
+    <string name="btn_signup"><b><u>Registrate Aquí</u></b></string>
+    <string name="btn_login">Iniciar Sesión</string>
     <string name="email_text">Email:</string>
     <string name="password_text">Contraseña:</string>
     <string name="name_text">Nombre:</string>
     <string name="number_text">Teléfono (+56):</string>
     <string name="cancel_text">Cancelar</string>
     <string name="register_text">Registrar</string>
-    <string name="register_title_form">Registro de usuario</string>
-    <string name="send_alert_text">Enviar alerta</string>
+    <string name="register_title_form">Crear Cuenta</string>
+    <string name="send_alert_text">Ayuda</string>
     <string name="contacts_text">Ver contactos</string>
-    <string name="logout_text">Salir</string>
-    <string name="add_contact_title">Creación de contacto</string>
+
+    <string name="add_contact_button">+ Añadir Contacto</string>
+    <string name="add_contact_title">Crear Contacto</string>
+    <string name="add_button">Añadir</string>
     <string name="cancel_alert_text">Cancelar alerta</string>
     <string name="finish_alert_text">Finalizar alerta</string>
     <string name="active_alert_id">active_alert_id</string>
     <string name="active_alert_exists">active_alert_exists</string>
+
+    <string name="default_notification_channel_id" translatable="false">fcm_cirkel_channel</string>
+    <string name="home_text">Inicio</string>
+    <string name="contacts_title_text">Contactos</string>
+    <string name="open_drawer">Abrir</string>
+    <string name="close_drawer">Cerrar</string>
+
+    <string name="lorem_ipsum">Lorem Ipsum</string>
+    <string name="logout_text">Salir</string>
+    <string name="contacts_title">Mis Contactos</string>
+    <string name="email_hint">Correo Electrónico</string>
+    <string name="password_hint">Contraseña</string>
+    <string name="name_hint">Nombre</string>
+    <string name="signup_text">¿Aún no tienes una cuenta?</string>
+    <string name="phone_hint">Cel: +56912345678</string>
+    <string name="password_hint_signup">Contraseña (más de 6 car.)</string>
+    <string name="password_hint_confirm">Confirme contraseña</string>
+    <string name="login_text">¿Ya tienes una cuenta?</string>
+    <string name="btn_login_suggestion"><u>  Inicia Sesión  </u></string>
 </resources>

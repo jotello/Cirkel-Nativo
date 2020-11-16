@@ -25,7 +25,8 @@ public class SignupPresenter implements SignupContract.Presenter, SignupContract
 
     @Override
     public boolean isValidForm(String email, String password,
-                               String name, String cellphone) {
+                               String name, String cellphone,
+                               String confirmPassword) {
         boolean isValid = true;
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             isValid = false;
@@ -33,6 +34,9 @@ public class SignupPresenter implements SignupContract.Presenter, SignupContract
         } else if (password.length() <= Constants.PASSWORD_LENGTH) {
             isValid = false;
             mView.displayPasswordError(BaseError.PASSWORD_LENGTH_ERROR);
+        } else if (!password.equals(confirmPassword)) {
+            isValid = false;
+            mView.displayPasswordError(BaseError.PASSWORD_NOT_EQUALS_ERROR);
         } else if (name.equals("")) {
             isValid = false;
             mView.displayNameError(BaseError.NAME_NULL_ERROR);
@@ -47,6 +51,7 @@ public class SignupPresenter implements SignupContract.Presenter, SignupContract
     public void onSuccess() {
         if(mView != null) {
             setLoader(false);
+            mView.displaySignupError("¡Cuenta creada con éxito!");
             mView.onNavigateLogin();
         }
     }
